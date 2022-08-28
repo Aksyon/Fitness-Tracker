@@ -1,30 +1,37 @@
 
 
-from turtle import distance, speed
-
-
 class Training():
     """Basic class for different sport activities."""
     LEN_STEP = 0.65
     M_IN_KM = 1000
-    H_IN_MIN = 60 
+    MIN_IN_H = 60 
 
-    def __init__(self, action: int, duration: float, weight: float):
-        self.action = action
+    def __init__(self, action_amount: int, duration: float, weight: float):
+        self.action_amount = action_amount
         self.duration = duration
         self.weight = weight
 
     def get_distance(self) -> float:
-        return self.action * self.LEN_STEP / self.M_IN_KM
+        return (self.action_amount * self.LEN_STEP / self.M_IN_KM)
 
     def get_mean_speed(self) -> float:
         return self.get_distance() / self.duration
     
     def get_spent_calories(self):
         pass
+    
+    def __str__(self):
+        return self.__class__
+    
     @staticmethod
     def show_training_info(self):
-        return InfoMessage(self)
+        info = InfoMessage()
+        info.training_type = self.__class__
+        info.duration = self.duration
+        info.distance = self.get_distance()
+        info.speed = self.get_mean_speed()
+        info.calories = self.get_spent_calories()
+        return info
 
 
 class Running(Training):
@@ -35,7 +42,7 @@ class Running(Training):
     def get_spent_calories(self) -> float:
         return ((self.COEF_CALORIE_1 * self.get_mean_speed() -
                 self.COEF_CALORIE_2) * self.weight / self.M_IN_KM *
-                self.duration * self.H_IN_MIN)
+                self.duration * self.MIN_IN_H)
 
 
 class SportsWalking(Training):
@@ -43,15 +50,14 @@ class SportsWalking(Training):
     COEF_CALORIES_1 = 0.035
     COEF_CALORIES_2 = 0.029
     
-
-    def __init__(self, height: float):
-        super().__init__(self)
+    def __init__(self, action_amount: int, duration: float, weight: float, height: float):
+        super().__init__(action_amount, duration, weight)
         self.height = height
     
     def get_spent_calories(self) -> float:
         return ((self.COEF_CALORIES_1 * self.weight + (self.get_mean_speed()**2
                // self.height) * self.COEF_CALORIES_2 * self.weight) *
-               self.duration * self.H_IN_MIN)
+               self.duration * self.MIN_IN_H)
 
 
 class Swimming(Training):
@@ -60,8 +66,9 @@ class Swimming(Training):
     COEF_CALORIES_2 = 2
     LEN_STEP = 1.38
 
-    def __init__(self, length_pool: int, count_pool: int):
-        super.__init__(self)
+    def __init__(self, action_amount: int, duration: float, weight: float,
+                length_pool: int, count_pool: int):
+        super().__init__(action_amount, duration, weight)
         self.length_pool = length_pool
         self.count_pool = count_pool
     
@@ -76,21 +83,27 @@ class Swimming(Training):
 
 class InfoMessage():
     """Class describe info object."""
-    def __innit__(self):
-        training_type = self.class_name
-        duration = self.duration
-        distance = self.get_distance()
-        speed = self.get_mean_speed()
-        calories = self.get_spent_calories
-    
+    MESSAGE = ('Тип тренировки: {activity}; '
+               'Длительность: {duration} ч.; '
+               'Дистанция: {distance} км; '
+               'Ср. скорость: {speed} км/ч; '
+               'Потрачено ккал: {calories}.')
+
+    training_type = None
+    duration = None
+    distance = None
+    speed = None
+    calories = None
+
     @staticmethod
     def printing(self):
-        return (f'Тип тренировки: {self.training_type};'
-                f'Длительность: {self.duration} ч.;'
-                f'Дистанция: {self.distance} км;'
-                f'Ср. скорость: {self.speed} км/ч;'
-                f'Потрачено ккал: {self.calories}.')
-
+        return self.MESSAGE.format(
+            activity = self.training_type,
+            duration = '%.3f' % self.duration,
+            distance = '%.3f' % self.distance,
+            speed = '%.3f' % self.speed,
+            calories = '%.3f' % self.calories
+            )
 
 def read_package(workout_type, data):
     if workout_type == 'SWM':
@@ -104,3 +117,16 @@ def read_package(workout_type, data):
 def main(training):
     info = Training.show_training_info(training)
     print(InfoMessage.printing(info))
+
+if __name__ == '__main__':
+    
+    packages = [        
+        ('SWM', [720, 1, 80, 25, 40]),
+        ('RUN', [15000, 1, 75]),
+        ('WLK', [9000, 1, 75, 180]),
+    ]
+
+    for workout_type, data in packages:
+        training = read_package(workout_type, data)
+        main(training)
+
