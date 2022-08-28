@@ -33,7 +33,6 @@ class Running(Training):
     COEF_CALORIE_2 = 20
     
     def get_spent_calories(self):
-        super.get_spent_calories(self)
         return ((self.COEF_CALORIE_1 * self.get_mean_speed() -
                 self.COEF_CALORIE_2) * self.weight / self.M_IN_KM *
                 self.duration * self.H_IN_MIN)
@@ -46,11 +45,29 @@ class SportsWalking(Training):
     
 
     def __init__(self, height):
-        super.__init__(self)
+        super().__init__(self)
         self.height = height
     
     def get_spent_calories(self):
-        super.get_spent_calories(self)
         return ((self.COEF_CALORIES_1 * self.weight + (self.get_mean_speed()**2
                // self.height) * self.COEF_CALORIES_2 * self.weight) *
                self.duration * self.H_IN_MIN)
+
+
+class Swimming(Training):
+    """Class describe methods and parameters for swimming activity."""
+    COEF_CALORIES_1 = 1.1
+    COEF_CALORIES_2 = 2
+
+    def __init__(self, length_pool, count_pool):
+        super.__init__(self)
+        self.length_pool = length_pool
+        self.count_pool = count_pool
+    
+    def get_mean_speed(self):
+        return ((self.length_pool * self.count_pool) /
+               self.M_IN_KM / self.duration)
+    
+    def get_spent_calories(self):
+        return ((self.get_mean_speed() + self.COEF_CALORIES_1) *
+               self.COEF_CALORIES_2 * self.weight)
