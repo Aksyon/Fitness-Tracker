@@ -7,6 +7,7 @@ class Training():
                 'WLK': 0.65
     }
     M_IN_KM = 1000
+    H_IN_MIN = 60 
 
     def __init__(self, action: int, duration: float, weight: float):
         self.action = action
@@ -27,14 +28,29 @@ class Training():
 
 
 class Running(Training):
-    """Class describe methods for running activity."""
+    """Class describe methods and parameters for running activity."""
     COEF_CALORIE_1 = 18
     COEF_CALORIE_2 = 20
-    H_IN_MIN = 60
-
+    
     def get_spent_calories(self):
         super.get_spent_calories(self)
         return ((self.COEF_CALORIE_1 * self.get_mean_speed() -
                 self.COEF_CALORIE_2) * self.weight / self.M_IN_KM *
                 self.duration * self.H_IN_MIN)
 
+
+class SportsWalking(Training):
+    """Class describe methods and parameters for walking activity."""
+    COEF_CALORIES_1 = 0.035
+    COEF_CALORIES_2 = 0.029
+    
+
+    def __init__(self, height):
+        super.__init__(self)
+        self.height = height
+    
+    def get_spent_calories(self):
+        super.get_spent_calories(self)
+        return ((self.COEF_CALORIES_1 * self.weight + (self.get_mean_speed()**2
+               // self.height) * self.COEF_CALORIES_2 * self.weight) *
+               self.duration * self.H_IN_MIN)
