@@ -1,9 +1,10 @@
 
 
-class Trainning():
+class Training():
     """Basic class for different sport activities."""
     LEN_STEP = {'SWM': 1.38,
-                'RUN': 0.65
+                'RUN': 0.65,
+                'WLK': 0.65
     }
     M_IN_KM = 1000
 
@@ -23,4 +24,17 @@ class Trainning():
     
     def show_training_info():
         pass
+
+
+class Running(Training):
+    """Class describe methods for running activity."""
+    COEF_CALORIE_1 = 18
+    COEF_CALORIE_2 = 20
+    H_IN_MIN = 60
+
+    def get_spent_calories(self):
+        super.get_spent_calories(self)
+        return ((self.COEF_CALORIE_1 * self.get_mean_speed() -
+                self.COEF_CALORIE_2) * self.weight / self.M_IN_KM *
+                self.duration * self.H_IN_MIN)
 
