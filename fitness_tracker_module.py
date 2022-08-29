@@ -23,13 +23,13 @@ class Training():
     
     @staticmethod
     def show_training_info(self):
-        info = InfoMessage()
-        info.training_type = self.__class__.__name__
-        info.duration = self.duration
-        info.distance = self.get_distance()
-        info.speed = self.get_mean_speed()
-        info.calories = self.get_spent_calories()
-        return info
+        return InfoMessage(
+            training_type = self.__class__.__name__,
+            duration = self.duration,
+            distance = self.get_distance(),
+            speed = self.get_mean_speed(),
+            calories = self.get_spent_calories()
+        )
 
 
 class Running(Training):
@@ -76,6 +76,7 @@ class Swimming(Training):
                self.COEF_CALORIES_2 * self.weight)
 
 
+@dataclass
 class InfoMessage():
     """Class describe info object."""
     MESSAGE = ('Тип тренировки: {activity}; '
@@ -84,11 +85,11 @@ class InfoMessage():
                'Ср. скорость: {speed} км/ч; '
                'Потрачено ккал: {calories}.')
 
-    training_type = None
-    duration = None
-    distance = None
-    speed = None
-    calories = None
+    training_type: str = None
+    duration: float = None
+    distance: float = None
+    speed: float = None
+    calories: float = None
 
     @staticmethod
     def printing(self):
