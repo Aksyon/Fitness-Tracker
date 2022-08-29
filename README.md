@@ -13,7 +13,7 @@ How to start the program:
 1) Import module Fitness-Tracker.
 
 2) Create the package of information from sensors:
-```
+```python
 packages = [('SWM', [720, 1, 80, 25, 40]),
             ('RUN', [15000, 1, 75]),
             ('WLK', [9000, 1, 75, 180])]
@@ -29,7 +29,8 @@ for sports walking: step counts, duration (hours), weight, heigth.
 4) Call function main for getting the message with different parameters of activity.
 
 Example:
-```
+```python
+
     for workout_type, data in packages:
         training = read_package(workout_type, data)
         main(training)

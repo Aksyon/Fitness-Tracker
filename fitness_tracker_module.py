@@ -1,15 +1,16 @@
+from dataclasses import dataclass
 
 
+@dataclass
 class Training():
     """Basic class for different sport activities."""
     LEN_STEP = 0.65
     M_IN_KM = 1000
     MIN_IN_H = 60 
 
-    def __init__(self, action_amount: int, duration: float, weight: float):
-        self.action_amount = action_amount
-        self.duration = duration
-        self.weight = weight
+    action_amount: int
+    duration: float
+    weight: float
 
     def get_distance(self) -> float:
         return (self.action_amount * self.LEN_STEP / self.M_IN_KM)
@@ -18,7 +19,7 @@ class Training():
         return self.get_distance() / self.duration
     
     def get_spent_calories(self):
-        pass
+        raise NotImplementedError('Subclasses should implement this!')
     
     @staticmethod
     def show_training_info(self):
@@ -42,15 +43,13 @@ class Running(Training):
                 self.duration * self.MIN_IN_H)
 
 
+@dataclass
 class SportsWalking(Training):
     """Class describe methods and parameters for walking activity."""
     COEF_CALORIES_1 = 0.035
     COEF_CALORIES_2 = 0.029
     
-    def __init__(self, action_amount: int, duration: float,
-                 weight: float, height: float):
-        super().__init__(action_amount, duration, weight)
-        self.height = height
+    height: float
     
     def get_spent_calories(self) -> float:
         return ((self.COEF_CALORIES_1 * self.weight + (self.get_mean_speed()**2
@@ -58,17 +57,15 @@ class SportsWalking(Training):
                self.duration * self.MIN_IN_H)
 
 
+@dataclass
 class Swimming(Training):
     """Class describe methods and parameters for swimming activity."""
     COEF_CALORIES_1 = 1.1
     COEF_CALORIES_2 = 2
     LEN_STEP = 1.38
 
-    def __init__(self, action_amount: int, duration: float, weight: float,
-                length_pool: int, count_pool: int):
-        super().__init__(action_amount, duration, weight)
-        self.length_pool = length_pool
-        self.count_pool = count_pool
+    length_pool: int
+    count_pool: int
     
     def get_mean_speed(self) -> float:
         return ((self.length_pool * self.count_pool) /
