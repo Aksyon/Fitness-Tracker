@@ -20,13 +20,10 @@ class Training():
     def get_spent_calories(self):
         pass
     
-    def __str__(self):
-        return self.__class__
-    
     @staticmethod
     def show_training_info(self):
         info = InfoMessage()
-        info.training_type = self.__class__
+        info.training_type = self.__class__.__name__
         info.duration = self.duration
         info.distance = self.get_distance()
         info.speed = self.get_mean_speed()
@@ -50,7 +47,8 @@ class SportsWalking(Training):
     COEF_CALORIES_1 = 0.035
     COEF_CALORIES_2 = 0.029
     
-    def __init__(self, action_amount: int, duration: float, weight: float, height: float):
+    def __init__(self, action_amount: int, duration: float,
+                 weight: float, height: float):
         super().__init__(action_amount, duration, weight)
         self.height = height
     
@@ -106,6 +104,8 @@ class InfoMessage():
             )
 
 def read_package(workout_type, data):
+    """Function for unpackaging the datat from sensors and creating object of
+    sports activity classes."""
     if workout_type == 'SWM':
         activity = Swimming(data[0], data[1], data[2], data[3], data[4])
     if workout_type == 'RUN':
@@ -115,6 +115,7 @@ def read_package(workout_type, data):
     return activity
 
 def main(training):
+    """Function for creating user message with activity parameters. """
     info = Training.show_training_info(training)
     print(InfoMessage.printing(info))
 
@@ -123,7 +124,7 @@ if __name__ == '__main__':
     packages = [        
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
-        ('WLK', [9000, 1, 75, 180]),
+        ('WLK', [9000, 1, 75, 180])
     ]
 
     for workout_type, data in packages:
