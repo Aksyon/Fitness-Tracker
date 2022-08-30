@@ -101,15 +101,18 @@ class InfoMessage():
             calories = '%.3f' % self.calories
             )
 
+sports_category = {'SWM' : Swimming,
+                   'RUN' : Running,
+                   'WLK' : SportsWalking
+}
+
 def read_package(workout_type, data):
     """Function for unpackaging the datat from sensors and creating object of
     sports activity classes."""
-    if workout_type == 'SWM':
-        activity = Swimming(data[0], data[1], data[2], data[3], data[4])
-    if workout_type == 'RUN':
-        activity = Running(data[0], data[1], data[2])
-    if workout_type == 'WLK':
-        activity = SportsWalking(data[0], data[1], data[2], data[3])
+    try:
+        activity = sports_category[workout_type](*data)
+    except KeyError:
+        raise KeyError(f'Вы ввели не поддерживаемую активность: {workout_type}')
     return activity
 
 def main(training):
